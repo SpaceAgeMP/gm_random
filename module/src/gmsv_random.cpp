@@ -2,6 +2,7 @@
 #include "GarrysMod/Lua/Interface.h"
 #include <math.h>
 #include <malloc.h>
+#include <string.h>
 
 using namespace GarrysMod::Lua;
 
@@ -57,7 +58,7 @@ LUA_FUNCTION(MakeSecureRandomNumber)
 	if (returnFloat)
 	{
 		struct RandInts s;
-		getrandom(&s, sizeof(RandInts), NULL);
+		getrandom(&s, sizeof(RandInts), 0);
 		double num = ldexp(s.a, -48) + ldexp(s.b, -32) + ldexp(s.c, -16);
 
 		if (min == 0)
@@ -77,7 +78,7 @@ LUA_FUNCTION(MakeSecureRandomNumber)
 	}
 
 	int wholeNum;
-	getrandom(&wholeNum, sizeof(int), NULL);
+	getrandom(&wholeNum, sizeof(int), 0);
 	if (wholeNum < 0)
 	{
 		wholeNum *= -1;
@@ -116,7 +117,7 @@ LUA_FUNCTION(MakeSecureRandomString)
 	}
 
 	char *out = (char*)malloc(len + 1);
-	getrandom(out, len, NULL);
+	getrandom(out, len, 0);
 
 	if (!allowAll)
 	{
