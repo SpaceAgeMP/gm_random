@@ -1,7 +1,7 @@
 set(SOURCES
-	gmsv_random.cpp)
+	random.cpp)
 
-add_library(gmsv_random SHARED ${SOURCES})
-target_link_libraries(gmsv_random gmod-module-base)
+add_library(random SHARED ${SOURCES})
+target_link_libraries(random gmod-module-base)
 
-set_gmod_suffix_prefix(gmsv_random)
+set_gmod_suffix_prefix(random)
