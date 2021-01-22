@@ -36,14 +36,14 @@ LUA_FUNCTION(MakeSecureRandomNumber)
 	int min = 0;
 	int max = 1;
 
-	if (LUA->IsType(1, Type::NUMBER))
+	if (LUA->IsType(1, Type::Number))
 	{
 		returnFloat = false;
-		if (LUA->IsType(2, Type::NUMBER))
+		if (LUA->IsType(2, Type::Number))
 		{
 			min = (int)LUA->GetNumber(1);
 			max = (int)LUA->GetNumber(2);
-			if (LUA->IsType(3, Type::BOOL))
+			if (LUA->IsType(3, Type::Bool))
 			{
 				returnFloat = LUA->GetBool(3);
 			}
@@ -106,11 +106,11 @@ LUA_FUNCTION(MakeSecureRandomString)
 	bool allowAll = false;
 	const char *letters = B64_LETTERS;
 	size_t lettercount = 64;
-	if (LUA->IsType(2, Type::BOOL))
+	if (LUA->IsType(2, Type::Bool))
 	{
 		allowAll = LUA->GetBool(2);
 	}
-	else if (LUA->IsType(2, Type::STRING))
+	else if (LUA->IsType(2, Type::String))
 	{
 		letters = LUA->GetString(2);
 		lettercount = strlen(letters);
