@@ -139,20 +139,20 @@ GMOD_MODULE_OPEN()
 	srand((unsigned int)time(NULL));
 #endif
 
-    LUA->PushSpecial(SPECIAL_GLOB);
-    LUA->PushString("SecureRandomNumber");
-    LUA->PushCFunction(MakeSecureRandomNumber);
-    LUA->SetTable(-3);
+	LUA->PushSpecial(SPECIAL_GLOB);
+	LUA->PushString("SecureRandomNumber");
+	LUA->PushCFunction(MakeSecureRandomNumber);
+	LUA->SetTable(-3);
 
 	LUA->PushSpecial(SPECIAL_GLOB);
 	LUA->PushString("SecureRandomString");
 	LUA->PushCFunction(MakeSecureRandomString);
 	LUA->SetTable(-3);
 
-    return 0;
+	return 0;
 }
 
 GMOD_MODULE_CLOSE()
 {
-    return 0;
+	return 0;
 }
