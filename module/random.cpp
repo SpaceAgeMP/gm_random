@@ -8,15 +8,21 @@ using namespace GarrysMod::Lua;
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <random>
-#include <time.h>
+#define WIN32_NO_STATUS
+#include <windows.h>
+#undef WIN32_NO_STATUS
+
+#include <winternl.h>
+#include <ntstatus.h>
+#include <winerror.h>
+
+#include <Bcrypt.h>
+
 size_t getrandom(void *buf, size_t buflen, unsigned int flags)
 {
-	unsigned char *bufc = (unsigned char*)buf;
-	for (size_t i = 0; i < buflen; i++)
-	{
-		bufc[i] = (rand() & 0xFF);
+	NTSTATUS status = BCryptGenRandom(NULL, (PUCHAR)buf, (ULONG)buflen, BCRYPT_USE_SYSTEM_PREFERRED_RNG);
+	if (!NT_SUCCESS(status)) {
+		return 0;
 	}
 	return buflen;
 }
@@ -58,7 +64,13 @@ LUA_FUNCTION(MakeSecureRandomNumber)
 	if (returnFloat)
 	{
 		struct RandInts s;
-		getrandom(&s, sizeof(RandInts), 0);
+		size_t res = getrandom(&s, sizeof(RandInts), 0);
+		if (res != sizeof(RandInts))
+		{
+			LUA->ThrowError("getrandom() failed");
+			return 1;
+		}
+
 		double num = ldexp(s.a, -48) + ldexp(s.b, -32) + ldexp(s.c, -16);
 
 		if (min == 0)
@@ -78,12 +90,18 @@ LUA_FUNCTION(MakeSecureRandomNumber)
 	}
 
 	int wholeNum;
-	getrandom(&wholeNum, sizeof(int), 0);
+	size_t res = getrandom(&wholeNum, sizeof(int), 0);
+	if (res != sizeof(int))
+	{
+		LUA->ThrowError("getrandom() failed");
+		return 1;
+	}
+
 	if (wholeNum < 0)
 	{
 		wholeNum *= -1;
 	}
-	
+
 	max++;
 	if (min == 0)
 	{
@@ -117,7 +135,18 @@ LUA_FUNCTION(MakeSecureRandomString)
 	}
 
 	char *out = (char*)malloc(len + 1);
-	getrandom(out, len, 0);
+	if (out == NULL)
+	{
+		LUA->ThrowError("malloc() failed");
+		return 1;
+	}
+
+	size_t res = getrandom(out, len, 0);
+	if (res != len)
+	{
+		LUA->ThrowError("getrandom() failed");
+		return 1;
+	}
 
 	if (!allowAll)
 	{
@@ -128,17 +157,13 @@ LUA_FUNCTION(MakeSecureRandomString)
 	}
 
 	out[len] = 0;
-	LUA->PushString(out, len);
+	LUA->PushString(out, (unsigned int)len);
 
 	return 1;
 }
 
 GMOD_MODULE_OPEN()
 {
-#ifdef _WIN32
-	srand((unsigned int)time(NULL));
-#endif
-
 	LUA->PushSpecial(SPECIAL_GLOB);
 	LUA->PushString("SecureRandomNumber");
 	LUA->PushCFunction(MakeSecureRandomNumber);
