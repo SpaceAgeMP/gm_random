@@ -12,7 +12,7 @@ jobs:
         id: create_release
 
   build_linux:
-    #needs: [create_release]
+    needs: [create_release]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -23,3 +23,10 @@ jobs:
           cd build
           cmake ..
           make -j$(nproc)
+      - name: Upload release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          tag_name: ${{ needs.create_release.outputs.tag-name }}
+          fail_on_unmatched_files: true
+          files: "build/*.dll"
