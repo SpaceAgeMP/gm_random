@@ -18,6 +18,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: lukka/get-cmake@v3.26.4
       - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: c9f906558f9bb12ee9811d6edc98ec9255c6cda5
       - uses: lukka/run-cmake@v10
       - name: Upload release
         uses: softprops/action-gh-release@v1
