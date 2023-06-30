@@ -21,6 +21,9 @@ jobs:
         with:
           vcpkgGitCommitId: c9f906558f9bb12ee9811d6edc98ec9255c6cda5
       - uses: lukka/run-cmake@v10
+        with:
+          configurePreset: ninja-multi-vcpkg
+          buildPreset: ninja-multi-vcpkg
       - name: Upload release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/v')
