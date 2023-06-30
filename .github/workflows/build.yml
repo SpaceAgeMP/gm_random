@@ -29,4 +29,4 @@ jobs:
         with:
           tag_name: ${{ needs.create_release.outputs.tag-name }}
           fail_on_unmatched_files: true
-          files: "build/*.dll"
+          files: "build/module/*.dll"
