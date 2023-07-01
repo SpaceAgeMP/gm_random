@@ -30,7 +30,7 @@ jobs:
         with:
           tag_name: ${{ needs.create_release.outputs.tag-name }}
           fail_on_unmatched_files: true
-          files: "bin/release/*.dll"
+          files: "builds/ninja-multi-vcpkg/bin/release/*.dll"
 
   build_linux:
     needs: [create_release]
