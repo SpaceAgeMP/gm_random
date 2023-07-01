@@ -51,3 +51,23 @@ jobs:
           tag_name: ${{ needs.create_release.outputs.tag-name }}
           fail_on_unmatched_files: true
           files: "build/module/*.dll"
+
+  build_macos:
+    needs: [create_release]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          set -ex
+          brew install cmake
+          mkdir build
+          cd build
+          cmake ..
+          make -j$(nproc)
+      - name: Upload release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          tag_name: ${{ needs.create_release.outputs.tag-name }}
+          fail_on_unmatched_files: true
+          files: "build/module/*.dll"
