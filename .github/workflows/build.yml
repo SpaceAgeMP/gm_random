@@ -37,7 +37,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: |
+      - name: Build
+        run: |
           set -ex
           sudo apt-get -y install gcc-multilib g++-multilib cmake
           mkdir build
@@ -57,9 +58,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
-      - run: |
+      - name: Build
+        run: |
           set -ex
-          brew install cmake
           mkdir build
           cd build
           cmake ..

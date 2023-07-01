@@ -1,7 +1,7 @@
 
 #include "GarrysMod/Lua/Interface.h"
 #include <math.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 
 using namespace GarrysMod::Lua;
@@ -28,6 +28,13 @@ size_t getrandom(void *buf, size_t buflen, unsigned int flags)
 }
 #else
 #include <sys/random.h>
+#endif
+
+#ifdef __APPLE__
+size_t getrandom(void *buf, size_t buflen, unsigned int flags)
+{
+	return getentropy(buf, buflen);
+}
 #endif
 
 struct RandInts {
