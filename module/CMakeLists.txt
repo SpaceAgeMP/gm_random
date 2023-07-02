@@ -10,7 +10,8 @@ if (WIN32)
 endif (WIN32)
 
 if (APPLE)
-	target_link_libraries(random Security)
+	find_library(SECURITY_FRAMEWORK Security)
+	target_link_libraries(random ${SECURITY_FRAMEWORK})
 endif (APPLE)
 
 set_gmod_suffix_prefix(random)
