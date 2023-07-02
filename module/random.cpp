@@ -7,6 +7,7 @@
 using namespace GarrysMod::Lua;
 
 #if defined(_WIN32)
+
 #define WIN32_LEAN_AND_MEAN
 #define WIN32_NO_STATUS
 #include <windows.h>
@@ -26,9 +27,12 @@ static size_t mkrandom(void *buf, size_t buflen)
 	}
 	return buflen;
 }
+
 #elif defined(__APPLE__)
+
 #include <Security/Security.h>
 #include <Security/SecRandom.h>
+
 static size_t mkrandom(void *buf, size_t buflen)
 {
 	int status = SecRandomCopyBytes(kSecRandomDefault, buflen, buf);
@@ -37,9 +41,13 @@ static size_t mkrandom(void *buf, size_t buflen)
 	}
 	return buflen;
 }
+
 #else
+
 #include <sys/random.h>
+
 #define mkrandom(buf, buflen) getrandom(buf, buflen, 0)
+
 #endif
 
 struct RandInts {
