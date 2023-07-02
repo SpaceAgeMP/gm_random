@@ -79,6 +79,9 @@ jobs:
         run: |
           set -ex
 
+          export CFLAGS="-s -flto -O2"
+          export CXXFLAGS="${CFLAGS}"
+          export LDFLAGS="${CFLAGS}"
           mkdir -p build
           pushd build
           cmake ..
