@@ -17,8 +17,10 @@ jobs:
     strategy:
       matrix:
         triplet: [x86-windows, x64-windows]
+        gmod_side: [sv, cl]
     env:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
+      GMOD_SIDE: ${{ matrix.gmod_side }}
     steps:
       - uses: actions/checkout@v3
       - uses: lukka/get-cmake@v3.26.4
@@ -60,14 +62,21 @@ jobs:
             rm -rf build
           }
 
+          runbuild_clsv() {
+            export GMOD_SIDE="cl"
+            runbuild
+            export GMOD_SIDE="sv"
+            runbuild
+          }
+
           export CFLAGS="-s -flto -O2"
           export CXXFLAGS="${CFLAGS}"
           export LDFLAGS="${CFLAGS}"
-          runbuild
+          runbuild_clsv
           export CFLAGS="-s -flto -O2 -m32"
           export CXXFLAGS="${CFLAGS}"
           export LDFLAGS="${CFLAGS}"
-          runbuild
+          runbuild_clsv
       - name: Upload release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/v')
@@ -85,18 +94,31 @@ jobs:
         run: |
           set -ex
 
+          runbuild() {
+            mkdir build
+            pushd build
+            cmake ..
+            make -j$(nproc)
+            mv module/*.dll ../out
+            popd
+            rm -rf build
+          }
+
+          runbuild_clsv() {
+            export GMOD_SIDE="cl"
+            runbuild
+            export GMOD_SIDE="sv"
+            runbuild
+          }
+
           export CFLAGS="-s -flto -O2"
           export CXXFLAGS="${CFLAGS}"
           export LDFLAGS="${CFLAGS}"
-          mkdir -p build
-          pushd build
-          cmake ..
-          make -j$(nproc)
-          popd
+          runbuild_clsv
       - name: Upload release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           tag_name: ${{ needs.create_release.outputs.tag-name }}
           fail_on_unmatched_files: true
-          files: "build/module/*.dll"
+          files: "out/*.dll"
