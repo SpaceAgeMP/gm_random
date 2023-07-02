@@ -94,6 +94,8 @@ jobs:
         run: |
           set -ex
 
+          mkdir out
+
           runbuild() {
             mkdir build
             pushd build
@@ -111,7 +113,7 @@ jobs:
             runbuild
           }
 
-          export CFLAGS="-s -flto -O2"
+          export CFLAGS="-flto -O2"
           export CXXFLAGS="${CFLAGS}"
           export LDFLAGS="${CFLAGS}"
           runbuild_clsv
