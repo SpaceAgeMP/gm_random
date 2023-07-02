@@ -6,7 +6,7 @@
 
 using namespace GarrysMod::Lua;
 
-#ifdef _WIN32
+#if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #define WIN32_NO_STATUS
 #include <windows.h>
@@ -18,7 +18,7 @@ using namespace GarrysMod::Lua;
 
 #include <Bcrypt.h>
 
-size_t getrandom(void *buf, size_t buflen, unsigned int flags)
+static size_t mkrandom(void *buf, size_t buflen)
 {
 	NTSTATUS status = BCryptGenRandom(NULL, (PUCHAR)buf, (ULONG)buflen, BCRYPT_USE_SYSTEM_PREFERRED_RNG);
 	if (!NT_SUCCESS(status)) {
@@ -26,15 +26,20 @@ size_t getrandom(void *buf, size_t buflen, unsigned int flags)
 	}
 	return buflen;
 }
+#elif defined(__APPLE__)
+#include <Security/Security.h>
+#include <Security/SecRandom.h>
+static size_t mkrandom(void *buf, size_t buflen)
+{
+	int status = SecRandomCopyBytes(kSecRandomDefault, buflen, buf);
+	if (status != errSecSuccess) {
+		return 0;
+	}
+	return buflen;
+}
 #else
 #include <sys/random.h>
-#endif
-
-#ifdef __APPLE__
-size_t getrandom(void *buf, size_t buflen, unsigned int flags)
-{
-	return getentropy(buf, buflen);
-}
+#define mkrandom(buf, buflen) getrandom(buf, buflen, 0)
 #endif
 
 struct RandInts {
@@ -71,10 +76,10 @@ LUA_FUNCTION(MakeSecureRandomNumber)
 	if (returnFloat)
 	{
 		struct RandInts s;
-		size_t res = getrandom(&s, sizeof(RandInts), 0);
+		size_t res = mkrandom(&s, sizeof(RandInts));
 		if (res != sizeof(RandInts))
 		{
-			LUA->ThrowError("getrandom() failed");
+			LUA->ThrowError("mkrandom() failed");
 			return 1;
 		}
 
@@ -97,10 +102,10 @@ LUA_FUNCTION(MakeSecureRandomNumber)
 	}
 
 	int wholeNum;
-	size_t res = getrandom(&wholeNum, sizeof(int), 0);
+	size_t res = mkrandom(&wholeNum, sizeof(int));
 	if (res != sizeof(int))
 	{
-		LUA->ThrowError("getrandom() failed");
+		LUA->ThrowError("mkrandom() failed");
 		return 1;
 	}
 
@@ -148,10 +153,10 @@ LUA_FUNCTION(MakeSecureRandomString)
 		return 1;
 	}
 
-	size_t res = getrandom(out, len, 0);
+	size_t res = mkrandom(out, len);
 	if (res != len)
 	{
-		LUA->ThrowError("getrandom() failed");
+		LUA->ThrowError("mkrandom() failed");
 		return 1;
 	}
 
