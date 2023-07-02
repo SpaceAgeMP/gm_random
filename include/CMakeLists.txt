@@ -9,7 +9,7 @@ add_library(gmod-module-base INTERFACE)
 target_include_directories(gmod-module-base INTERFACE ./)
 
 function(set_gmod_suffix_prefix library)
-	if("${GMOD_SIDE}" STREQUAL "cl")
+	if("$ENV{GMOD_SIDE}" STREQUAL "cl")
 		SET_TARGET_PROPERTIES(${library} PROPERTIES PREFIX "gmcl_")
 	else()
 		SET_TARGET_PROPERTIES(${library} PROPERTIES PREFIX "gmsv_")
