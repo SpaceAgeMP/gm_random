@@ -51,6 +51,7 @@ jobs:
             make -j$(nproc)
             mv module/*.dll ../out
             popd
+            rm -rf build
           }
 
           export CFLAGS="-s -O2"
