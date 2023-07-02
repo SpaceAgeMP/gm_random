@@ -69,11 +69,13 @@ jobs:
             runbuild
           }
 
-          export CFLAGS="-s -flto -O2"
+          export CFLAGS_BASE="-fPIC -s -flto -O2"
+
+          export CFLAGS="${CFLAGS_BASE}"
           export CXXFLAGS="${CFLAGS}"
           export LDFLAGS="${CFLAGS}"
           runbuild_clsv
-          export CFLAGS="-s -flto -O2 -m32"
+          export CFLAGS="${CFLAGS_BASE} -m32"
           export CXXFLAGS="${CFLAGS}"
           export LDFLAGS="${CFLAGS}"
           runbuild_clsv
@@ -113,7 +115,7 @@ jobs:
             runbuild
           }
 
-          export CFLAGS="-flto -O2"
+          export CFLAGS="-fPIC -flto -O2"
           export CXXFLAGS="${CFLAGS}"
           export LDFLAGS="${CFLAGS}"
           runbuild_clsv
