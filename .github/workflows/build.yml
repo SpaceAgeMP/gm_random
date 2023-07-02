@@ -40,18 +40,32 @@ jobs:
       - name: Build
         run: |
           set -ex
+
+          mkdir out
           sudo apt-get -y install gcc-multilib g++-multilib cmake
-          mkdir build
-          cd build
-          cmake ..
-          make -j$(nproc)
+
+          runbuild() {
+            mkdir build
+            pushd build
+            cmake ..
+            make -j$(nproc)
+            mv module/*.dll ../out
+            popd
+          }
+
+          export CFLAGS="-s -O2"
+          export LDFLAGS="-s -O2"
+          runbuild
+          export CFLAGS="-s -O2 -m32"
+          export LDFLAGS="-s -O2 -m32"
+          runbuild
       - name: Upload release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           tag_name: ${{ needs.create_release.outputs.tag-name }}
           fail_on_unmatched_files: true
-          files: "build/module/*.dll"
+          files: "out/*.dll"
 
   build_macos:
     needs: [create_release]
@@ -61,10 +75,12 @@ jobs:
       - name: Build
         run: |
           set -ex
-          mkdir build
-          cd build
+
+          mkdir -p build
+          pushd build
           cmake ..
           make -j$(nproc)
+          popd
       - name: Upload release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/v')
