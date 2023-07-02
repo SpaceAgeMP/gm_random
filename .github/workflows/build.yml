@@ -55,10 +55,12 @@ jobs:
           }
 
           export CFLAGS="-s -O2"
-          export LDFLAGS="-s -O2"
+          export CXXFLAGS="${CFLAGS}"
+          export LDFLAGS="${CFLAGS}"
           runbuild
           export CFLAGS="-s -O2 -m32"
-          export LDFLAGS="-s -O2 -m32"
+          export CXXFLAGS="${CFLAGS}"
+          export LDFLAGS="${CFLAGS}"
           runbuild
       - name: Upload release
         uses: softprops/action-gh-release@v1
