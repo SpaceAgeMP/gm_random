@@ -54,11 +54,11 @@ jobs:
             rm -rf build
           }
 
-          export CFLAGS="-s -O2"
+          export CFLAGS="-s -flto -O2"
           export CXXFLAGS="${CFLAGS}"
           export LDFLAGS="${CFLAGS}"
           runbuild
-          export CFLAGS="-s -O2 -m32"
+          export CFLAGS="-s -flto -O2 -m32"
           export CXXFLAGS="${CFLAGS}"
           export LDFLAGS="${CFLAGS}"
           runbuild
