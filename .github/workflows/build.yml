@@ -100,7 +100,7 @@ jobs:
             mkdir build
             pushd build
             cmake ..
-            make -j$(nproc)
+            make -j$(sysctl -n hw.logicalcpu)
             mv module/*.dll ../out
             popd
             rm -rf build
