@@ -135,15 +135,14 @@ LUA_FUNCTION(MakeSecureRandomNumber)
 	return 1;
 }
 
-const char *B64_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+const char *DEFAULT_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 LUA_FUNCTION(MakeSecureRandomString)
 {
 	size_t len = (size_t)LUA->CheckNumber(1);
 
 	bool allowAll = false;
-	const char *letters = B64_LETTERS;
-	size_t lettercount = 64;
+	const char *letters = DEFAULT_LETTERS;
 	if (LUA->IsType(2, Type::Bool))
 	{
 		allowAll = LUA->GetBool(2);
@@ -151,7 +150,6 @@ LUA_FUNCTION(MakeSecureRandomString)
 	else if (LUA->IsType(2, Type::String))
 	{
 		letters = LUA->GetString(2);
-		lettercount = strlen(letters);
 	}
 
 	char *out = (char*)malloc(len + 1);
@@ -170,6 +168,7 @@ LUA_FUNCTION(MakeSecureRandomString)
 
 	if (!allowAll)
 	{
+		const size_t lettercount = strlen(letters);
 		for (size_t i = 0; i < len; i++)
 		{
 			out[i] = letters[out[i] % lettercount];
