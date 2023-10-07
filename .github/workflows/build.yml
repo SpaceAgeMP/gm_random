@@ -50,6 +50,7 @@ jobs:
           set -ex
 
           mkdir out
+          sudo apt-get update
           sudo apt-get -y install gcc-multilib g++-multilib cmake
 
           runbuild() {
