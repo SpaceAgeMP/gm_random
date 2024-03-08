@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         id: create_release
 
@@ -33,7 +33,7 @@ jobs:
           buildPreset: ninja-multi-vcpkg
           buildPresetAdditionalArgs: "['--config Release']"
       - name: Upload release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           tag_name: ${{ needs.create_release.outputs.tag-name }}
@@ -81,7 +81,7 @@ jobs:
           export LDFLAGS="${CFLAGS}"
           runbuild_clsv
       - name: Upload release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           tag_name: ${{ needs.create_release.outputs.tag-name }}
@@ -121,7 +121,7 @@ jobs:
           export LDFLAGS="${CFLAGS}"
           runbuild_clsv
       - name: Upload release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           tag_name: ${{ needs.create_release.outputs.tag-name }}
