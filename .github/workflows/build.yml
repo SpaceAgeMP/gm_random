@@ -22,7 +22,7 @@ jobs:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
       GMOD_SIDE: ${{ matrix.gmod_side }}
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: actions/checkout@v4
       - uses: lukka/get-cmake@v3.29.1
       - uses: lukka/run-vcpkg@v11
         with:
@@ -44,7 +44,7 @@ jobs:
     needs: [create_release]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: actions/checkout@v4
       - name: Build
         run: |
           set -ex
@@ -92,7 +92,7 @@ jobs:
     needs: [create_release]
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: actions/checkout@v4
       - name: Build
         run: |
           set -ex
