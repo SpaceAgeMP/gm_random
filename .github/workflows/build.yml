@@ -25,6 +25,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@v3.29.1
       - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: a34c873a9717a888f58dc05268dea15592c2f0ff
       - uses: lukka/run-cmake@v10
         with:
           configurePreset: ninja-multi-vcpkg
