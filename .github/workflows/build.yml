@@ -23,7 +23,7 @@ jobs:
       GMOD_SIDE: ${{ matrix.gmod_side }}
     steps:
       - uses: actions/checkout@v5
-      - uses: lukka/get-cmake@v4.1.1
+      - uses: lukka/get-cmake@v4.1.2
       - uses: lukka/run-vcpkg@v11
         with:
           vcpkgGitCommitId: a34c873a9717a888f58dc05268dea15592c2f0ff
