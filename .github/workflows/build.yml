@@ -27,7 +27,7 @@ jobs:
       - uses: lukka/run-vcpkg@v11
         with:
           vcpkgGitCommitId: a34c873a9717a888f58dc05268dea15592c2f0ff
-      - uses: lukka/run-cmake@v10
+      - uses: lukka/run-cmake@v10.9
         with:
           configurePreset: ninja-multi-vcpkg
           buildPreset: ninja-multi-vcpkg
